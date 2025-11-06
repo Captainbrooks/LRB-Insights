@@ -103,7 +103,7 @@ export function DashboardLayout() {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton>
-                                    <LayoutDashboard className="h-5 w-5 mr-2" />
+                                    <LayoutDashboard className="h-5 w-5" />
                                     Dashboard
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -210,15 +210,15 @@ export function DashboardLayout() {
         </div>
       </div>
     </header>
-                <main className="flex flex-1 flex-col p-6 gap-6 border border-blue-800">
+                <main className="flex flex-1 flex-col p-6 gap-6">
 
                     
-                    <div className="rounded-lg bg-muted h-full">
+                    <div className="rounded-lg h-full">
                         <Index />
                     </div>
-                    <div className="rounded-lg bg-muted h-48">
+                    {/* <div className="rounded-lg bg-muted h-48">
                         
-                    </div>
+                    </div> */}
                 </main>
             </SidebarInset>
         </SidebarProvider>

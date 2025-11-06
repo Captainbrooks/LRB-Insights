@@ -6,6 +6,7 @@ import KPICard from '@/components/layout/KPICard.jsx'
 
 
 import { Eye, MousePointerClick, DollarSign, Target, Users, TrendingUp, MousePointer, Activity } from 'lucide-react'
+import ChartArea from '@/components/layout/ChartArea.jsx'
 
 export default function Index() {
 
@@ -118,27 +119,32 @@ const kpiData = [
 
 {/* performance metrics */}
 
- <div>
-    <h2 className="text-3xl font-bold tracking-tight">Performance Metrics</h2>
-          <p className="text-muted-foreground mt-1">
-            Multi-channel campaign performance overview for {currentClient.name}
-          </p>
-
-
-
-
-
-           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {kpiData.map((kpi) => (
-          <KPICard key={kpi.title} {...kpi} />
-        ))}
-      </div>
-        </div>
-
-
-
-
+          <div>
+              <h2 className="text-3xl font-bold tracking-tight">Performance Metrics</h2>
+              <p className="text-muted-foreground mt-1">
+                  Multi-channel campaign performance overview for {currentClient.name}
+              </p>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-4">
+                  {kpiData.map((kpi) => (
+                      <KPICard key={kpi.title} {...kpi} />
+                  ))}
+              </div>
+          </div>
 {/* performance metrics */}
+
+
+
+{/* chartArea */}
+
+<div>
+ <ChartArea
+        timeSeriesData={currentClient.timeSeriesData}
+        platformData={currentClient.platformData}
+        channelDistribution={currentClient.channelDistribution}
+      />
+</div>
+
+{/* chartArea */}
 
 
 

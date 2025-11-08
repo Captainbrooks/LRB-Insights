@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { Search } from "lucide-react"
+import { useState } from "react"
 
 
 
@@ -59,15 +60,29 @@ import {
     LayoutDashboard,
     Users,
     FileText,
+    MessageSquare
 
 
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import Index from "../../pages/index"
-import ClientTabs from "./ClientTabs"
-
+import Clients from "../../pages/Clients"
+import Reports from "../../pages/Reports"
+import SettingsPage from "../../pages/Settings"
+import Posts from "../../pages/Posts"
 export function DashboardLayout() {
+
+
+const [currentPage, setCurrentPage] = useState("Index");
+
+const handleNavigation=(page)=>{
+    setCurrentPage(page);
+}
+
+
+
+
     return (
         <SidebarProvider>
             <Sidebar collapsible="icon">
@@ -101,28 +116,36 @@ export function DashboardLayout() {
                             Navigation
                         </SidebarGroupLabel>
                         <SidebarMenu>
-                            <SidebarMenuItem>
+                            <SidebarMenuItem className="" onClick={() => handleNavigation("Index")}>
                                 <SidebarMenuButton>
                                     <LayoutDashboard className="h-5 w-5" />
                                     Dashboard
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
 
-                            <SidebarMenuItem>
+                            <SidebarMenuItem onClick={() => handleNavigation("Clients")}>
                                 <SidebarMenuButton tooltip="Models">
                                     <Users className="h-5 w-5" />
                                     Clients
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
 
-                            <SidebarMenuItem>
+
+                             <SidebarMenuItem className="" onClick={() => handleNavigation("Posts")}>
+                                <SidebarMenuButton>
+                                    <MessageSquare className="h-5 w-5" />
+                                    Posts Insights
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+
+                            <SidebarMenuItem onClick={() => handleNavigation("Reports")}>
                                 <SidebarMenuButton tooltip="Docs">
                                     <FileText className="h-5 w-5" />
                                     Reports
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
 
-                            <SidebarMenuItem>
+                            <SidebarMenuItem onClick={() => handleNavigation("Settings")}>
                                 <SidebarMenuButton tooltip="Settings">
                                     <Settings className="h-5 w-5" />
                                     Settings
@@ -214,7 +237,11 @@ export function DashboardLayout() {
 
                     
                     <div className="rounded-lg h-full">
-                        <Index />
+                        {currentPage === "Index" && <Index />}
+                        {currentPage === "Clients" && <Clients />}
+                        {currentPage === "Posts" && <Posts />}
+                        {currentPage === "Reports" && <Reports />}
+                        {currentPage === "Settings" && <SettingsPage />}
                     </div>
                     {/* <div className="rounded-lg bg-muted h-48">
                         

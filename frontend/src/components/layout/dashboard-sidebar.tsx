@@ -65,13 +65,22 @@ import {
 
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import AddClientDialog from "../layout/AddClientDialog"
+
+
+
 
 import Index from "../../pages/index"
 import Clients from "../../pages/Clients"
 import Reports from "../../pages/Reports"
 import SettingsPage from "../../pages/Settings"
 import Posts from "../../pages/Posts"
+
+
+
 export function DashboardLayout() {
+
+    const [isAddClientOpen, setIsAddClientOpen] = useState(false);
 
 
 const [currentPage, setCurrentPage] = useState("Index");
@@ -84,7 +93,7 @@ const handleNavigation=(page)=>{
 
 
     return (
-        <SidebarProvider>
+        <SidebarProvider className="">
             <Sidebar collapsible="icon">
 
                 <SidebarHeader>
@@ -204,15 +213,23 @@ const handleNavigation=(page)=>{
           </div>
         </div>
 
+
+       
+
         <div className="ml-auto flex items-center gap-3">
-          <Button className="gradient-primary hover:opacity-90 transition-opacity">
+          <Button 
+            className="gradient-primary hover:opacity-90 transition-opacity"
+            onClick={() => setIsAddClientOpen(true)}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Client
           </Button>
+          <AddClientDialog open={isAddClientOpen} onOpenChange={setIsAddClientOpen} />
+          
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
+              <Button size="icon" className="rounded-full">
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-gradient-primary text-white">
                     <User className="h-5 w-5" />

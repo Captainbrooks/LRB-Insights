@@ -75,12 +75,12 @@ const kpiData = [
 
 
   return (
-    <div className="flex-1 space-y-6 p-6 animate-fade-in">
+    <div className="flex-1 space-y-6 p-6 animate-fade-in bg-[linear-gradient(135deg,_#f5f9fd_0%,_#edf3fa_45%,_#e7eef8_100%)]">
 
 {/* header */}
         <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Good Afternoon , Milton</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-[#142f59]">Good Afternoon , Milton</h2>
           <p className="text-muted-foreground mt-1">
             Multi-channel campaign performance overview
           </p>

@@ -2,12 +2,18 @@ import { clientProfiles } from "@/data/mockClient"
 
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
-import { useState } from "react"
+import {useEffect, useState } from "react"
 import { ClientCard } from "@/components/layout/ClientCard"
+
+
+import axios from "axios"
 
 
 
 export default function Clients() {
+
+  const [clients, setClients] = useState([]);
+
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -18,6 +24,26 @@ export default function Clients() {
 
    const activeClients = filteredClients.filter(c => c.status === "Active");
   const pausedClients = filteredClients.filter(c => c.status === "Paused");
+
+
+
+  useEffect(()=>{
+    // fetch clients from backend
+
+    const fetchClients = async ()=>{
+      try {
+
+        const response= await axios.get(`${import.meta.env.VITE_API_URL}/clients/`);
+        console.log("Fetched clients:", response.data);
+        setClients(response.data);
+        
+      } catch (error) {
+        console.error("Error fetching clients:", error.message); 
+      }
+    }
+
+    fetchClients();
+  },[])
 
 
   return (
@@ -61,12 +87,12 @@ export default function Clients() {
         </div>
       </div>
 
-      {activeClients.length > 0 && (
+      {clients.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Active Clients</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {activeClients.map((client) => (
-              <ClientCard key={client.id} client={client} />
+            {clients.map((client) => (
+              <ClientCard key={client._id} client={client} />
             ))}
           </div>
         </div>

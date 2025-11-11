@@ -1,9 +1,24 @@
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ExternalLink, Settings } from "lucide-react";
-
-// You don’t need ClientProfile import anymore — JS doesn’t use type definitions
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import {
+  ExternalLink,
+  Settings,
+  BarChart2,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
+} from "lucide-react";
+import axios from "axios";
 
 const platformIcons = {
   "Google Ads": "🔍",
@@ -14,75 +29,196 @@ const platformIcons = {
   "TikTok": "🎵",
 };
 
+const getStatusIcon = (status) => {
+  switch (status) {
+    case "Connected":
+      return <CheckCircle2 className="h-4 w-4 text-success" />;
+    case "Pending":
+      return <AlertCircle className="h-4 w-4 text-accent" />;
+    case "Not Connected":
+      return <XCircle className="h-4 w-4 text-muted-foreground" />;
+    default:
+      return null;
+  }
+};
+
+const getStatusBadgeVariant = (status) => {
+  switch (status) {
+    case "Connected":
+      return "default";
+    case "Pending":
+      return "secondary";
+    case "Not Connected":
+      return "outline";
+    default:
+      return "outline";
+  }
+};
+
 export function ClientCard({ client }) {
+
+
+
+
+  const handleConnectPlatform=async(clientId, platformName, currentStatus)=>{
+
+    console.log("Handle connect/disconnect for client:", clientId, "platform:", platformName, "current status:", currentStatus);
+
+    try {
+
+      const response= await axios.get(`${import.meta.env.VITE_API_URL}/google/auth?clientId=${clientId}`);
+
+    
+      console.log("Platform connection response:", response.data);
+      // Optionally, refresh client data here to reflect changes
+      
+    } catch (error) {
+      console.error("Error connecting/disconnecting platform:", error.message);
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+  const [isManageOpen, setIsManageOpen] = useState(false);
+
   const spendPercentage = (client.totalSpend / client.monthlyBudget) * 100;
 
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-300">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src={client.logo}
-              alt={client.name}
-              className="w-12 h-12 rounded-lg"
-            />
-            <div>
-              <h3 className="font-semibold text-lg">{client.name}</h3>
-              <p className="text-sm text-muted-foreground">{client.industry}</p>
+    <>
+      {/* Card */}
+      <Card className="hover:shadow-lg transition-shadow duration-300 rounded-2xl">
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src={client.logo}
+                alt={client.clientName}
+                className="w-12 h-12 rounded-lg"
+              />
+              <div>
+                <h3 className="font-semibold text-lg">{client.clientName}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {client.industry}
+                </p>
+              </div>
+            </div>
+
+            {/* <Badge
+              variant={client.status === "Active" ? "default" : "secondary"}
+            >
+              {client.status}
+            </Badge> */}
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {/* Monthly Spend */}
+          <div>
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-muted-foreground">Monthly Spend</span>
+              <span className="font-medium">
+                {/* ${client.totalSpend.toLocaleString()} / $ */}
+                {client.monthlyBudget.toLocaleString()}
+              </span>
+            </div>
+            {/* <div className="w-full bg-secondary rounded-full h-2">
+              <div
+                className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
+                style={{ width: `${Math.min(spendPercentage, 100)}%` }}
+              />
+            </div> */}
+          </div>
+
+          {/* Connected Platforms */}
+          <div>
+            <p className="text-sm text-muted-foreground mb-2">
+              Connected Platforms
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {client.connectedPlatforms?.map((platform) => (
+                <div
+                  key={platform}
+                  className="flex items-center gap-1 px-2 py-1 bg-secondary rounded-md text-xs"
+                >
+                  <span>{platformIcons[platform] || "🔗"}</span>
+                  <span>{platform}</span>
+                </div>
+              ))}
             </div>
           </div>
-          <Badge variant={client.status === "Active" ? "default" : "secondary"}>
-            {client.status}
-          </Badge>
-        </div>
-      </CardHeader>
 
-      <CardContent className="space-y-4">
-        <div>
-          <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-muted-foreground">Monthly Spend</span>
-            <span className="font-medium">
-              ${client.totalSpend.toLocaleString()} / $
-              {client.monthlyBudget.toLocaleString()}
-            </span>
+          {/* Buttons */}
+          <div className="flex gap-2 pt-2">
+            <Button variant="default" size="sm" className="flex-1">
+              <ExternalLink className="h-4 w-4 mr-1" />
+              View Dashboard
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={() => setIsManageOpen(true)}
+            >
+              <Settings className="h-4 w-4 mr-1" />
+              Manage
+            </Button>
           </div>
-          <div className="w-full bg-secondary rounded-full h-2">
-            <div
-              className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
-              style={{ width: `${Math.min(spendPercentage, 100)}%` }}
-            />
-          </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        <div>
-          <p className="text-sm text-muted-foreground mb-2">
-            Connected Platforms
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {client.connectedPlatforms.map((platform) => (
-              <div
-                key={platform}
-                className="flex items-center gap-1 px-2 py-1 bg-secondary rounded-md text-xs"
-              >
-                <span>{platformIcons[platform] || "🔗"}</span>
-                <span>{platform}</span>
+      {/* Manage Modal */}
+      <Dialog open={isManageOpen} onOpenChange={setIsManageOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Manage {client.clientName}</DialogTitle>
+            <DialogDescription>
+              Connect or manage linked accounts for this client.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-1 py-4">
+            {client.platformConnections?.map((platform, index) => (
+              <div key={platform.name}>
+                <div className="flex items-center justify-between py-3 px-2">
+                  <div className="flex items-center gap-3">
+                    {getStatusIcon(platform.status)}
+                    <span className="font-medium">{platform.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={getStatusBadgeVariant(platform.status)}>
+                      {platform.status}
+                    </Badge>
+                    <Button
+                    onClick={()=>handleConnectPlatform(client._id, platform.name, platform.status)}
+                      variant={
+                        platform.status === "Connected" ? "outline" : "default"
+                      }
+                      size="sm"
+                    >
+                      {platform.status === "Connected"
+                        ? "Disconnect"
+                        : "Connect"}
+                    </Button>
+                  </div>
+                </div>
+
+                {index < client.platformConnections.length - 1 && (
+                  <Separator />
+                )}
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="flex gap-2 pt-2">
-          <Button variant="default" size="sm" className="flex-1">
-            <ExternalLink className="h-4 w-4 mr-1" />
-            View Dashboard
-          </Button>
-          <Button variant="outline" size="sm" className="flex-1">
-            <Settings className="h-4 w-4 mr-1" />
-            Manage
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
+export default ClientCard;

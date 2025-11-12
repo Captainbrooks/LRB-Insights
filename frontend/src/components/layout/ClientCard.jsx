@@ -55,36 +55,53 @@ const getStatusBadgeVariant = (status) => {
   }
 };
 
-export function ClientCard({ client }) {
+import GA4Selector from "./GA4Selector";
+import SearchConsoleSelector from "./SearchConsoleSelector";
+import YouTubeMetrics from "./YoutubeMetrics";
+
+export function ClientCard({ client, fetchClients }) {
 
 
 
 
-  const handleConnectPlatform=async(clientId, platformName, currentStatus)=>{
+  const handleConnectPlatform = async (clientId, platformName, currentStatus) => {
 
     console.log("Handle connect/disconnect for client:", clientId, "platform:", platformName, "current status:", currentStatus);
 
     try {
 
-      const response= await axios.get(`${import.meta.env.VITE_API_URL}/google/auth?clientId=${clientId}`);
+      if (currentStatus === "Connected") {
+        if (platformName === "Google") {
+          // disconnect flow
 
-    
-      console.log("Platform connection response:", response.data);
-      // Optionally, refresh client data here to reflect changes
-      
+          const response = await axios.post(`${import.meta.env.VITE_API_URL}/google/disconnect`, {
+            clientId
+          });
+
+          console.log("Disconnected Response", response.data)
+        }
+
+      } else {
+
+        if (platformName === "Google") {
+          console.log("connect flow")
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/google/auth?clientId=${clientId}`);
+
+          console.log("Platform connection response:", response.data);
+          
+          // Optionally, refresh client data here to reflect changes
+
+        }
+      }
+
+      await fetchClients();
+
+
     } catch (error) {
       console.error("Error connecting/disconnecting platform:", error.message);
     }
 
   }
-
-
-
-
-
-
-
-
 
 
   const [isManageOpen, setIsManageOpen] = useState(false);
@@ -143,13 +160,13 @@ export function ClientCard({ client }) {
               Connected Platforms
             </p>
             <div className="flex flex-wrap gap-2">
-              {client.connectedPlatforms?.map((platform) => (
+              {client.platformConnections?.filter((platform)=>platform.status==="Connected").map((platform) => (
                 <div
-                  key={platform}
+                  key={platform._id}
                   className="flex items-center gap-1 px-2 py-1 bg-secondary rounded-md text-xs"
                 >
-                  <span>{platformIcons[platform] || "🔗"}</span>
-                  <span>{platform}</span>
+                  <span>{"🔗"}</span>
+                  <span>{platform.name}</span>
                 </div>
               ))}
             </div>
@@ -209,6 +226,14 @@ export function ClientCard({ client }) {
                     </Button>
                   </div>
                 </div>
+
+              {platform.name === "Google" && platform.status === "Connected" && (
+  <div className="pl-8 py-4 space-y-4">
+    {/* <GA4Selector clientId={client._id} /> */}
+    {/* <SearchConsoleSelector clientId={client._id} /> */}
+    <YouTubeMetrics clientId={client._id} />
+  </div>
+)}
 
                 {index < client.platformConnections.length - 1 && (
                   <Separator />

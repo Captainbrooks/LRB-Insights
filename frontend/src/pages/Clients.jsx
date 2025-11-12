@@ -27,10 +27,8 @@ export default function Clients() {
 
 
 
-  useEffect(()=>{
-    // fetch clients from backend
 
-    const fetchClients = async ()=>{
+  const fetchClients = async ()=>{
       try {
 
         const response= await axios.get(`${import.meta.env.VITE_API_URL}/clients/`);
@@ -42,8 +40,12 @@ export default function Clients() {
       }
     }
 
+  useEffect(()=>{
+    // fetch clients from backend
     fetchClients();
   },[])
+
+
 
 
   return (
@@ -92,7 +94,7 @@ export default function Clients() {
           <h3 className="text-lg font-semibold">Active Clients</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {clients.map((client) => (
-              <ClientCard key={client._id} client={client} />
+              <ClientCard key={client._id} client={client} fetchClients={fetchClients} />
             ))}
           </div>
         </div>
@@ -103,7 +105,7 @@ export default function Clients() {
           <h3 className="text-lg font-semibold">Paused Clients</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {pausedClients.map((client) => (
-              <ClientCard key={client.id} client={client} />
+              <ClientCard key={client.id} client={client}  />
             ))}
           </div>
         </div>

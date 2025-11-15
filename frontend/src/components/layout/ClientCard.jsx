@@ -58,6 +58,7 @@ const getStatusBadgeVariant = (status) => {
 import GA4Selector from "./GA4Selector";
 import SearchConsoleSelector from "./SearchConsoleSelector";
 import YouTubeMetrics from "./YoutubeMetrics";
+import { data } from "autoprefixer";
 
 export function ClientCard({ client, fetchClients }) {
 
@@ -81,6 +82,14 @@ export function ClientCard({ client, fetchClients }) {
           console.log("Disconnected Response", response.data)
         }
 
+        if (platformName === "Meta") {
+        // Meta disconnect flow (we will build this later)
+        alert("Meta disconnect not implemented yet.");
+        return;
+      }
+
+        
+
       } else {
 
         if (platformName === "Google") {
@@ -91,6 +100,17 @@ export function ClientCard({ client, fetchClients }) {
           
           // Optionally, refresh client data here to reflect changes
 
+        }
+
+
+        if(platformName === "Meta"){
+          const response=await axios.get(`
+            ${import.meta.env.VITE_API_URL}/meta/auth`,{
+              params: {clientId}
+            });
+
+            console.log("Meta connection response:", response.data)
+            console.log(response.data);
         }
       }
 

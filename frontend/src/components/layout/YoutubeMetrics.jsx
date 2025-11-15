@@ -29,7 +29,7 @@ export default function YouTubeMetrics({ clientId }) {
         )
         setData(res.data.data || {})
       } catch (err) {
-        console.error("Error fetching YouTube metrics:", err)
+        console.error(" hahahha Error fetching YouTube metrics:", err)
         setError("Failed to load YouTube Analytics data.")
       } finally {
         setLoading(false)

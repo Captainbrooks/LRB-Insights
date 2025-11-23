@@ -29,6 +29,14 @@ const platformIcons = {
   "TikTok": "🎵",
 };
 
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue
+} from "@/components/ui/select";
+
 const getStatusIcon = (status) => {
   switch (status) {
     case "Connected":
@@ -58,7 +66,7 @@ const getStatusBadgeVariant = (status) => {
 import GA4Selector from "./GA4Selector";
 import SearchConsoleSelector from "./SearchConsoleSelector";
 import YouTubeMetrics from "./YoutubeMetrics";
-import { data } from "autoprefixer";
+import MetaInsights from "./MetaInsights";
 
 export function ClientCard({ client, fetchClients }) {
 
@@ -83,9 +91,13 @@ export function ClientCard({ client, fetchClients }) {
         }
 
         if (platformName === "Meta") {
-        // Meta disconnect flow (we will build this later)
-        alert("Meta disconnect not implemented yet.");
-        return;
+        // Meta disconnect flow 
+
+        const response=await axios.post(`${import.meta.env.VITE_API_URL}/meta/disconnect`,{
+          clientId
+        });
+
+        console.log("Disconnected")
       }
 
         
@@ -253,7 +265,82 @@ export function ClientCard({ client, fetchClients }) {
     {/* <SearchConsoleSelector clientId={client._id} /> */}
     <YouTubeMetrics clientId={client._id} />
   </div>
+
 )}
+
+
+{
+  
+  platform.name === "Meta" && platform.status === "Connected" && (
+
+    <>
+    <div className="pl-8 py-4 space-y-4">
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Select Facebook Page</label>
+
+        <Select
+          value={client.metaAccounts.selectedPageId || ""}
+          onValueChange={async (pageId) => {
+            try {
+              await axios.post(`${import.meta.env.VITE_API_URL}/meta/select-page`, {
+                clientId: client._id,
+                pageId: pageId,
+              });
+              await fetchClients(); // Refresh UI
+            } catch (err) {
+              console.error("Error selecting page:", err.message);
+            }
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Choose a Facebook Page" />
+          </SelectTrigger>
+
+          <SelectContent>
+            {client.metaAccounts.pages?.map((page) => (
+              <SelectItem key={page.pageId} value={page.pageId}>
+                {page.pageName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* IG Status */}
+      {(() => {
+        const selectedPage = client.metaAccounts.pages?.find(
+          (p) => p.pageId === client.metaAccounts.selectedPageId
+        );
+
+        return selectedPage?.instagramBusinessId ? (
+          <p className="text-xs text-green-600 flex items-center gap-1">
+            <span>✓</span> Instagram Business linked
+          </p>
+        ) : (
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <span>⚠</span> Instagram not connected to this page
+          </p>
+        );
+      })()}
+    </div>
+
+
+
+
+
+<MetaInsights clientId={client._id} />
+
+
+</>
+
+  )
+
+
+}
+
+
+
 
                 {index < client.platformConnections.length - 1 && (
                   <Separator />

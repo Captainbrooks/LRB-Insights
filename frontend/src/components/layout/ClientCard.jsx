@@ -67,6 +67,7 @@ import GA4Selector from "./GA4Selector";
 import SearchConsoleSelector from "./SearchConsoleSelector";
 import YouTubeMetrics from "./YoutubeMetrics";
 import MetaInsights from "./MetaInsights";
+import MetaHierarchyPicker from "./MetaHierarchyPicker";
 
 export function ClientCard({ client, fetchClients }) {
 
@@ -330,6 +331,8 @@ export function ClientCard({ client, fetchClients }) {
 
 
 <MetaInsights clientId={client._id} />
+
+<MetaHierarchyPicker clientId={client._id}/>
 
 
 </>

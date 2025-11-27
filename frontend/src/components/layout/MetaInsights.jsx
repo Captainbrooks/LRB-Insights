@@ -20,31 +20,31 @@ export default function MetaInsights({ clientId }) {
   // const [igData, setIgData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadInsights = async () => {
-      try {
-        const pageRes = await axios.get(
-          `${import.meta.env.VITE_API_URL}/meta/meta-ad-accounts/${clientId}`
-        );
+  // useEffect(() => {
+  //   const loadInsights = async () => {
+  //     try {
+  //       const pageRes = await axios.get(
+  //         `${import.meta.env.VITE_API_URL}/meta/meta-campaigns/${clientId}`
+  //       );
 
-        // const igRes = await axios.get(
-        //   `${import.meta.env.VITE_API_URL}/meta/instagram-insights/${clientId}`
-        // );
+  //       // const igRes = await axios.get(
+  //       //   `${import.meta.env.VITE_API_URL}/meta/instagram-insights/${clientId}`
+  //       // );
 
-        console.log(pageRes.data)
+  //       console.log(pageRes.data)
 
-        // setPageData(pageRes.data.data);
-        // setIgData(igRes.data.data);
+  //       // setPageData(pageRes.data.data);
+  //       // setIgData(igRes.data.data);
 
-      } catch (err) {
-        console.error("Meta insights error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //     } catch (err) {
+  //       console.error("Meta insights error:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    loadInsights();
-  }, [clientId]);
+  //   loadInsights();
+  // }, [clientId]);
 
   if (loading) {
     return <p>Loading Meta Insights...</p>;
